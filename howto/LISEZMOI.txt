@@ -1,0 +1,224 @@
+================================================================
+PROTOCOLE DE TEST DE CAPSULES MICROPHONIQUES AVEC BRUIT ROSE
+================================================================
+Usage : Tri et vérification comparative de capsules électret
+
+================================================================
+PARTIE 1 : ÉTAPES DU PROTOCOLE
+================================================================
+
+ÉTAPE 1 - PRÉPARATION DU MATERIEL
+---------------------------------
+- Disposer d'un ordinateur avec Python installé
+- Installer les bibliothèques nécessaires :
+    pip install numpy scipy matplotlib
+- Préparer une enceinte de qualité (monitoring de préférence)
+- Préparer un enregistreur audio (carte son USB ou enregistreur portable)
+- Préparer les capsules à tester, soudées sur des fils temporaires
+- Préparer une capsule de référence (connue bonne)
+
+ÉTAPE 2 - GÉNÉRATION DU BRUIT ROSE
+----------------------------------
+- Lancer le script de génération :
+    python3 generate_pink_noise.py -d 10 -r 44100 -o pink_noise.wav
+- Paramètres par défaut recommandés :
+    Durée : 10 secondes
+    Fréquence d'échantillonnage : 44100 Hz
+    Format : WAV 16 bits
+- Copier le fichier pink_noise.wav sur une clé USB ou le laisser sur l'ordinateur
+
+ÉTAPE 3 - INSTALLATION DU DISPOSITIF DE TEST
+--------------------------------------------
+- Placer l'enceinte sur une surface stable
+- Marquer au sol ou sur la table la position de la capsule à 30 cm de l'enceinte
+- S'assurer que la pièce est calme (pas de ventilateur, fenêtres fermées)
+- Connecter l'enregistreur à l'ordinateur
+- Vérifier les niveaux d'enregistrement (ne pas saturer)
+
+ÉTAPE 4 - ENREGISTREMENT DE LA RÉFÉRENCE
+----------------------------------------
+- Placer la capsule de référence à la position marquée (30 cm)
+- Lancer la lecture du fichier pink_noise.wav
+- Enregistrer pendant 10 secondes
+- Nommer le fichier : reference_capsule.wav
+- Vérifier à l'écoute que le son est bien présent et non saturé
+
+ÉTAPE 5 - TEST DES CAPSULES
+---------------------------
+- Retirer la capsule de référence
+- Placer la première capsule à tester EXACTEMENT à la même position
+- Lancer la lecture du bruit rose
+- Enregistrer pendant 10 secondes
+- Nommer le fichier : capsule_001.wav
+- Répéter l'opération pour chaque capsule :
+    capsule_002.wav, capsule_003.wav, etc.
+- IMPORTANT : ne pas déplacer l'enceinte, ne pas changer le volume
+
+ÉTAPE 6 - ANALYSE COMPARATIVE
+-----------------------------
+- Placer tous les fichiers WAV dans un même dossier
+- Lancer le script d'analyse :
+    python3 analyze_capsules.py -i ./enregistrements/ -o rapport.pdf
+- Le script génère un rapport PDF contenant :
+    - Superposition des spectres fréquentiels
+    - Tableau récapitulatif des RMS
+    - Identification des capsules hors tolérance
+- Consulter le rapport pour identifier les capsules défectueuses
+
+ÉTAPE 7 - INTERPRÉTATION DES RESULTATS
+--------------------------------------
+- Une capsule est CONFORME si son RMS est dans la tolérance (+/- 6 dB)
+- Une capsule est REJETEE si son RMS s'écarte de plus de 6 dB de la moyenne
+- Vérifier visuellement les spectres :
+    - Une capsule avec un spectre très irrégulier est suspecte
+    - Une capsule avec un bruit de fond excessif est à rejeter
+- Conserver le rapport PDF pour traçabilité
+
+
+================================================================
+PARTIE 2 : CONSEILS PRATIQUES
+================================================================
+
+CONCERNANT L'ENCEINCE
+---------------------
+- Utiliser une enceinte de monitoring avec réponse en fréquence la plus plate possible
+- Eviter les enceintes grand public avec basses boostées ou aigus accentués
+- Placer l'enceinte sur un support stable, pas directement sur une surface creuse
+- Ne pas changer le volume entre les tests (utiliser un repère sur le bouton)
+- Si possible, utiliser une enceinte pleine bande de qualité (ex: petit monitor de studio)
+
+CONCERNANT LA PIÈCE DE TEST
+---------------------------
+- Choisir une pièce calme, loin des bruits extérieurs (trafic, climatisation)
+- Eviter les pièces très réverbérantes (carrelage, murs nus)
+- Si possible, entourer la zone de test de mousse acoustique ou de couvertures
+- Fermer les fenêtres et couper les ventilateurs pendant les tests
+- Une petite pièce meublée (tapis, rideaux, canapé) est souvent meilleure qu'une grande pièce vide
+
+CONCERNANT LE POSITIONNEMENT
+----------------------------
+- Marquer la position exacte de chaque capsule (scotch, feutre)
+- Utiliser un support rigide pour maintenir la capsule (pince, support 3D)
+- Respecter une distance fixe (30 cm est un bon compromis)
+- Orienter la capsule toujours dans le même axe (face à l'enceinte)
+- Ne pas toucher la capsule pendant l'enregistrement (bruits de manipulation)
+
+CONCERNANT L'ENREGISTREMENT
+---------------------------
+- Utiliser TOUJOURS le même enregistreur et les mêmes réglages
+- Vérifier les niveaux avant chaque prise (pas de saturation, pas de bruit de fond excessif)
+- Utiliser un câble blindé de bonne qualité entre la capsule et l'enregistreur
+- Alimenter la capsule avec une pile neuve ou une alimentation stabilisée
+- Attendre 5 secondes avant le début de l'enregistrement (stabilisation)
+- Enregistrer 10 secondes minimum pour avoir une bonne moyenne statistique
+
+CONCERNANT LES CAPSULES
+-----------------------
+- Vérifier la polarité (+/-) avant chaque test (boîtier = négatif)
+- S'assurer que le trou acoustique n'est pas bouché par de l'étain ou du flux
+- Manipuler les capsules avec précaution (sensibles à l'ESD et à la chaleur)
+- Ne pas souffler directement sur la capsule (risque de damage de la membrane)
+- Tester d'abord la capsule au multimètre (tap test) avant l'enregistrement
+
+CONCERNANT L'ANALYSE
+--------------------
+- La méthode est RELATIVE, pas absolue : elle compare les capsules entre elles
+- Elle ne donne pas la sensibilité réelle en dBV/Pa
+- La réponse en fréquence mesurée inclut aussi les défauts de l'enceinte
+- Un écart de +/- 3 dB entre capsules est normal et acceptable
+- Un écart supérieur à 6 dB indique un problème
+- En cas de doute, refaire le test avec une autre position ou une autre enceinte
+
+CONCERNANT LA TRAÇABILITE
+-------------------------
+- Nommer les fichiers de manière explicite (capsule_001, capsule_002, etc.)
+- Conserver un fichier texte ou CSV listant les capsules testées
+- Archiver les rapports PDF avec la date et le nom de l'opérateur
+- Conserver les fichiers WAV au moins le temps de la production
+- Noter les conditions de test (température, humidité si pertinentes)
+
+CONCERNANT LES LIMITES DE LA METHODE
+------------------------------------
+- Cette méthode ne remplace pas une calibration professionnelle
+- Elle ne permet pas de mesurer la directivité
+- Elle ne permet pas de mesurer la distorsion harmonique (THD)
+- Elle est sensible aux conditions acoustiques de la pièce
+- Pour des certificats officiels, utiliser un microphone étalonné et une chambre anéchoïque
+- Pour du tri rapide en production artisanale, cette méthode est parfaitement adaptée
+
+
+================================================================
+PARTIE 3 : COMMANDES UTILES
+================================================================
+
+Générer du bruit rose :
+  python3 generate_pink_noise.py -d 10 -r 44100 -o pink_noise.wav
+  python3 generate_pink_noise.py --duration 30 --rate 48000 --output test.wav
+  python3 generate_pink_noise.py --voss  (algorithme plus precis mais plus lent)
+
+Analyser les capsules :
+  python3 analyze_capsules.py -i ./enregistrements/ -o rapport.pdf
+  python3 analyze_capsules.py --input-dir ./tests/ --threshold 3.0
+  python3 analyze_capsules.py --pattern "capsule_*.wav"
+
+Vérifier les fichiers audio :
+  ls -lh *.wav
+  file pink_noise.wav
+  soxi pink_noise.wav  (si sox installe)
+
+
+================================================================
+PARTIE 4 : CRITÈRES D'ACCEPTATION
+================================================================
+
+Capsule CONFORME :
+  - RMS dans la tolérance (+/- 6 dB par rapport à la moyenne)
+  - Spectre fréquentiel régulier (pas de bosses > 3 dB)
+  - Bruit de fond acceptable (SNR > 40 dB si mesurable)
+  - Réponse au tap test correcte au multimètre
+
+Capsule À VÉRIFIER :
+  - RMS entre 3 et 6 dB d'écart avec la moyenne
+  - Spectre avec quelques irrégularités
+  - Refaire le test pour confirmer
+
+Capsule REJETÉE :
+  - RMS supérieur à 6 dB d'écart avec la moyenne
+  - Spectre très irrégulier ou plat
+  - Pas de réponse au tap test
+  - Bruit de fond excessif (friture, ronflement)
+  - Court-circuit ou circuit ouvert détecté au multimètre
+
+
+================================================================
+PARTIE 5 : DEPANNAGE
+================================================================
+
+Problème : Aucun son enregistré
+  - Vérifier l'alimentation de la capsule
+  - Vérifier les soudures et la polarité
+  - Vérifier le câble et les connexions
+  - Tester la capsule au multimètre (tap test)
+
+Problème : Son saturé (clipping)
+  - Baisser le gain de l'enregistreur
+  - Eloigner la capsule de l'enceinte
+  - Baisser le volume de l'enceinte
+
+Problème : Bruit de fond excessif
+  - Changer de pièce (plus calme)
+  - Utiliser une alimentation par pile
+  - Vérifier le blindage du câble
+  - Eloigner les sources de parasites (transformateurs, écrans)
+
+Problème : Résultats incohérents entre deux tests
+  - Vérifier que la position de la capsule est identique
+  - Vérifier que le volume de l'enceinte n'a pas bougé
+  - Attendre que la pièce soit calme
+  - Refaire le test avec la capsule de référence pour vérifier
+
+Problème : Toutes les capsules semblent mauvaises
+  - Vérifier l'enceinte (elle n'est peut-être pas adaptée)
+  - Vérifier l'enregistreur (réglages incorrects)
+  - Changer de pièce de test
+  - Recalibrer avec une capsule connue bonne

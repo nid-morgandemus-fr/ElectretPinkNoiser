@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎤 ElectretPinkNoiser - Tutorial</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg-dark: #0a0e1a;
+    --bg-card: #141a2e;
+    --bg-card-hover: #1a2240;
+    --accent: #00d9ff;
+    --accent-2: #00ff88;
+    --accent-3: #ff6b9d;
+    --text: #e4e9f2;
+    --text-dim: #8892b0;
+    --border: #233056;
+  }
+  
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  
+  /* Animated background with particles */
+  .bg-particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    background: 
+      radial-gradient(ellipse at top, #1a2240 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, #0f1528 0%, transparent 50%),
+      var(--bg-dark);
+  }
+  
+  .bg-particles::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(0, 217, 255, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(0, 255, 136, 0.06) 0%, transparent 40%);
+    animation: bgPulse 10s ease-in-out infinite;
+  }
+  
+  @keyframes bgPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+  }
+  
+  .hero h1 {
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+    animation: slideDown 1s ease-out;
+  }
+  
+  .hero .subtitle {
+    font-size: 1.3rem;
+    color: var(--text-dim);
+    max-width: 700px;
+    animation: slideUp 1s ease-out 0.3s both;
+  }
+  
+  .hero .badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(0, 217, 255, 0.1);
+    border: 1px solid var(--accent);
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    animation: slideDown 1s ease-out 0.2s both;
+  }
+  
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    animation: bounce 2s infinite;
+  }
+  
+  .scroll-indicator::after {
+    content: '↓';
+    display: block;
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 10px); }
+  }
+  
+  /* SECTIONS */
+  section {
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .section-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 2px;
+  }
+  
+  .section-intro {
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+    max-width: 800px;
+  }
+  
+  /* TEST BENCH SCHEMA - ANIMATED SVG */
+  .bench-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bench-svg {
+    width: 100%;
+    height: 300px;
+    display: block;
+  }
+  
+  .sound-wave {
+    stroke: var(--accent);
+    stroke-width: 2;
+    fill: none;
+    opacity: 0.7;
+    stroke-dasharray: 10 5;
+    animation: waveFlow 2s linear infinite;
+  }
+  
+  @keyframes waveFlow {
+    to { stroke-dashoffset: -30; }
+  }
+  
+  .pulse-ring {
+    fill: none;
+    stroke: var(--accent-2);
+    stroke-width: 2;
+    opacity: 0;
+    animation: pulseRing 2s ease-out infinite;
+  }
+  
+  .pulse-ring:nth-child(2) { animation-delay: 0.5s; }
+  .pulse-ring:nth-child(3) { animation-delay: 1s; }
+  
+  @keyframes pulseRing {
+    0% { r: 5; opacity: 0.8; }
+    100% { r: 40; opacity: 0; }
+  }
+  
+  /* PINK NOISE CANVAS */
+  .pink-noise-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+  
+  #pinkNoiseCanvas {
+    width: 100%;
+    height: 200px;
+    background: #0a0e1a;
+    border-radius: 10px;
+    display: block;
+  }
+  
+  .noise-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    padding: 0.7rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent), #0099cc);
+    color: var(--bg-dark);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 0.95rem;
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 217, 255, 0.3);
+  }
+  
+  .btn.secondary {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  
+  /* EQUIPMENT - GRID */
+  .equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .equip-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  .equip-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .equip-card:hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-5px);
+    border-color: var(--accent);
+  }
+  
+  .equip-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  
+  .equip-card h3 {
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .equip-card p {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+  
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 3rem;
+    margin-top: 3rem;
+  }
+  
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2), var(--accent-3));
+  }
+  
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s;
+  }
+  
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .timeline-item::before {
+    content: attr(data-step);
+    position: absolute;
+    left: -3rem;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--bg-dark);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 0.9rem;
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+  }
+  
+  .timeline-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+  }
+  
+  .timeline-content:hover {
+    border-color: var(--accent);
+    box-shadow: 0 5px 20px rgba(0, 217, 255, 0.1);
+  }
+  
+  .timeline-content h3 {
+    color: var(--accent-2);
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+  }
+  
+  .timeline-content ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .timeline-content li {
+    padding: 0.4rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text-dim);
+  }
+  
+  .timeline-content li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  
+  /* CRITERIA */
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .criteria-card {
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 2px solid;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .criteria-card.ok {
+    border-color: var(--accent-2);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), transparent);
+  }
+  
+  .criteria-card.warn {
+    border-color: #ffaa00;
+    background: linear-gradient(135deg, rgba(255, 170, 0, 0.05), transparent);
+  }
+  
+  .criteria-card.ko {
+    border-color: var(--accent-3);
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.05), transparent);
+  }
+  
+  .criteria-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
+  
+  .criteria-card.ok h3 { color: var(--accent-2); }
+  .criteria-card.warn h3 { color: #ffaa00; }
+  .criteria-card.ko h3 { color: var(--accent-3); }
+  
+  .criteria-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .criteria-card li {
+    padding: 0.4rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+  }
+  
+  .criteria-card.ok li::before { content: '✓'; position: absolute; left: 0; color: var(--accent-2); font-weight: bold; }
+  .criteria-card.warn li::before { content: '?'; position: absolute; left: 0; color: #ffaa00; font-weight: bold; }
+  .criteria-card.ko li::before { content: '✗'; position: absolute; left: 0; color: var(--accent-3); font-weight: bold; }
+  
+  /* CODE BLOCKS */
+  .code-block {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+    color: #a5d6ff;
+    margin: 1rem 0;
+    overflow-x: auto;
+    position: relative;
+  }
+  
+  .code-block::before {
+    content: '$';
+    color: var(--accent-2);
+    margin-right: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .code-label {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.8rem;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* TIPS - ACCORDION */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .tip-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  
+  .tip-header {
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: var(--accent);
+    transition: background 0.2s;
+  }
+  
+  .tip-header:hover {
+    background: var(--bg-card-hover);
+  }
+  
+  .tip-header .arrow {
+    transition: transform 0.3s;
+  }
+  
+  .tip-item.open .tip-header .arrow {
+    transform: rotate(180deg);
+  }
+  
+  .tip-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    padding: 0 1.2rem;
+  }
+  
+  .tip-item.open .tip-content {
+    max-height: 500px;
+    padding: 0 1.2rem 1.2rem;
+  }
+  
+  .tip-content ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .tip-content li {
+    padding: 0.4rem 0;
+    padding-left: 1.2rem;
+    position: relative;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+  
+  .tip-content li::before {
+    content: '💡';
+    position: absolute;
+    left: 0;
+    font-size: 0.8rem;
+  }
+  
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  
+  footer .heart {
+    color: var(--accent-3);
+    animation: heartbeat 1.5s ease-in-out infinite;
+    display: inline-block;
+  }
+  
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+  
+  /* AI BADGE */
+  .ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.2rem;
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 107, 157, 0.1));
+    border: 1px solid var(--accent);
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--accent);
+    position: relative;
+    overflow: hidden;
+    animation: badgeGlow 3s ease-in-out infinite;
+  }
+  
+  .ai-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 217, 255, 0.3), transparent);
+    animation: shimmer 3s infinite;
+  }
+  
+  .ai-icon {
+    font-size: 1.1rem;
+    animation: robotBob 2s ease-in-out infinite;
+  }
+  
+  .ai-text {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  
+  .ai-sparkle {
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes badgeGlow {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 217, 255, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(0, 217, 255, 0.5); }
+  }
+  
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  
+  @keyframes robotBob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-2px) rotate(-5deg); }
+    75% { transform: translateY(-2px) rotate(5deg); }
+  }
+  
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    section { padding: 3rem 1rem; }
+    .timeline { padding-left: 2.5rem; }
+    .timeline-item::before { left: -2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-particles"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <h1>ElectretPinkNoiser<br>for electret capsule testing</h1>
+  <p class="subtitle">
+    An amateur protocol to sort, test and compare your microphone capsules 
+    with pink noise, Python and a bit of rigor.
+  </p>
+  <div class="scroll-indicator">Scroll to discover</div>
+</header>
+
+<!-- TEST BENCH SCHEMA -->
+<section>
+  <h2 class="section-title">🔬 The Test Bench</h2>
+  <p class="section-intro">
+    Visualize the principle: a speaker broadcasts pink noise, the capsule captures the signal, 
+    the recorder digitizes it. Everything happens at 30 cm, in silence.
+  </p>
+  
+  <div class="bench-container">
+    <svg class="bench-svg" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">
+      <!-- Speaker -->
+      <g transform="translate(80, 100)">
+        <rect x="0" y="0" width="100" height="140" rx="8" fill="#233056" stroke="#00d9ff" stroke-width="2"/>
+        <circle cx="50" cy="40" r="15" fill="#0a0e1a" stroke="#00d9ff" stroke-width="2"/>
+        <circle cx="50" cy="90" r="25" fill="#0a0e1a" stroke="#00d9ff" stroke-width="2"/>
+        <circle cx="50" cy="90" r="15" fill="#141a2e"/>
+        <text x="50" y="165" text-anchor="middle" fill="#8892b0" font-size="12">SPEAKER</text>
+      </g>
+      
+      <!-- Animated sound waves -->
+      <g>
+        <path class="sound-wave" d="M 200 170 Q 220 150, 240 170 T 280 170 T 320 170 T 360 170"/>
+        <path class="sound-wave" d="M 200 170 Q 220 190, 240 170 T 280 170 T 320 170 T 360 170" style="animation-delay: 0.3s"/>
+        <path class="sound-wave" d="M 200 170 Q 220 160, 240 170 T 280 170 T 320 170 T 360 170" style="animation-delay: 0.6s"/>
+      </g>
+      
+      <!-- Capsule -->
+      <g transform="translate(400, 140)">
+        <circle class="pulse-ring" cx="30" cy="30" r="5"/>
+        <circle class="pulse-ring" cx="30" cy="30" r="5"/>
+        <circle class="pulse-ring" cx="30" cy="30" r="5"/>
+        <circle cx="30" cy="30" r="25" fill="#141a2e" stroke="#00ff88" stroke-width="2"/>
+        <circle cx="30" cy="30" r="18" fill="#0a0e1a" stroke="#00ff88" stroke-width="1"/>
+        <circle cx="30" cy="30" r="3" fill="#00ff88"/>
+        <text x="30" y="80" text-anchor="middle" fill="#8892b0" font-size="12">CAPSULE</text>
+        <text x="30" y="95" text-anchor="middle" fill="#8892b0" font-size="10">at 30 cm</text>
+      </g>
+      
+      <!-- Cable -->
+      <path d="M 460 170 Q 500 170, 540 180 T 600 200" stroke="#ff6b9d" stroke-width="2" fill="none" stroke-dasharray="5 3">
+        <animate attributeName="stroke-dashoffset" from="0" to="-16" dur="1s" repeatCount="indefinite"/>
+      </path>
+      
+      <!-- Recorder -->
+      <g transform="translate(620, 130)">
+        <rect x="0" y="0" width="120" height="80" rx="8" fill="#233056" stroke="#ff6b9d" stroke-width="2"/>
+        <circle cx="30" cy="40" r="8" fill="#0a0e1a" stroke="#ff6b9d" stroke-width="2"/>
+        <circle cx="30" cy="40" r="3" fill="#ff6b9d">
+          <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
+        </circle>
+        <rect x="55" y="25" width="50" height="6" rx="3" fill="#0a0e1a"/>
+        <rect x="55" y="25" width="30" height="6" rx="3" fill="#00ff88">
+          <animate attributeName="width" values="10;45;20;40;15" dur="2s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="55" y="40" width="50" height="6" rx="3" fill="#0a0e1a"/>
+        <rect x="55" y="40" width="25" height="6" rx="3" fill="#00d9ff">
+          <animate attributeName="width" values="15;40;25;35;10" dur="1.5s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="55" y="55" width="50" height="6" rx="3" fill="#0a0e1a"/>
+        <rect x="55" y="55" width="20" height="6" rx="3" fill="#ff6b9d">
+          <animate attributeName="width" values="20;30;10;45;20" dur="1.8s" repeatCount="indefinite"/>
+        </rect>
+        <text x="60" y="100" text-anchor="middle" fill="#8892b0" font-size="12">RECORDER</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- EQUIPMENT -->
+<section>
+  <h2 class="section-title">🧰 Required Equipment</h2>
+  <p class="section-intro">
+    Everything you need to set up your test lab at home. No pro equipment needed, 
+    just rigor and consistency.
+  </p>
+  
+  <div class="equipment-grid">
+    <div class="equip-card">
+      <div class="equip-icon">💻</div>
+      <h3>Computer + Python</h3>
+      <p>With numpy, scipy and matplotlib libraries installed.</p>
+    </div>
+    <div class="equip-card">
+      <div class="equip-icon">🔊</div>
+      <h3>Monitoring Speaker</h3>
+      <p>Flattest frequency response possible. Avoid "boosted" speakers.</p>
+    </div>
+    <div class="equip-card">
+      <div class="equip-icon">🎙️</div>
+      <h3>Audio Recorder</h3>
+      <p>USB sound card or portable recorder. Always the same for all tests.</p>
+    </div>
+    <div class="equip-card">
+      <div class="equip-icon">🔌</div>
+      <h3>Capsules + Wires</h3>
+      <p>Capsules to test soldered on temporary wires, with reference capsule.</p>
+    </div>
+    <div class="equip-card">
+      <div class="equip-icon">🔋</div>
+      <h3>Clean Power Supply</h3>
+      <p>Fresh battery or stabilized power supply to bias the capsule (3V typical).</p>
+    </div>
+    <div class="equip-card">
+      <div class="equip-icon">📏</div>
+      <h3>Support + Markers</h3>
+      <p>Clamp or 3D printed support, tape to mark position at 30 cm from speaker.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PINK NOISE -->
+<section>
+  <h2 class="section-title">🌸 Pink Noise</h2>
+  <p class="section-intro">
+    Pink noise has a spectral density that decreases by 3 dB per octave. 
+    It excites all frequencies in a balanced way — perfect for testing capsule response.
+  </p>
+  
+  <div class="pink-noise-box">
+    <canvas id="pinkNoiseCanvas"></canvas>
+    <div class="noise-controls">
+      <button class="btn" onclick="togglePinkNoise()">⏯️ Play / Pause</button>
+      <button class="btn secondary" onclick="generatePinkNoiseFile()">💾 Generate WAV File</button>
+    </div>
+    <p style="margin-top: 1rem; color: var(--text-dim); font-size: 0.9rem;">
+      Real-time visualization. Click "Generate" to create <code>pink_noise.wav</code> 
+      (10s, 44.1 kHz, 16 bits) to copy to your USB drive.
+    </p>
+  </div>
+</section>
+
+<!-- PROTOCOL TIMELINE -->
+<section>
+  <h2 class="section-title">📋 The 7 Protocol Steps</h2>
+  <p class="section-intro">
+    Follow these steps in order, without skipping any. Rigor is the key to reproducibility.
+  </p>
+  
+  <div class="timeline">
+    <div class="timeline-item" data-step="1">
+      <div class="timeline-content">
+        <h3>🔧 Equipment Preparation</h3>
+        <ul>
+          <li>Install Python and libraries (<code>numpy scipy matplotlib</code>)</li>
+          <li>Prepare speaker, recorder, soldered capsules</li>
+          <li>Identify a known-good reference capsule</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="timeline-item" data-step="2">
+      <div class="timeline-content">
+        <h3>🎵 Pink Noise Generation</h3>
+        <ul>
+          <li>Run: <code>python3 generate_pink_noise.py -d 10 -r 44100 -o pink_noise.wav</code></li>
+          <li>Parameters: 10s, 44.1 kHz, WAV 16 bits</li>
+          <li>Copy file to USB drive or keep on computer</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="timeline-item" data-step="3">
+      <div class="timeline-content">
+        <h3>📍 Device Setup</h3>
+        <ul>
+          <li>Speaker on stable surface</li>
+          <li>Mark capsule position at 30 cm</li>
+          <li>Quiet room, windows closed, no fans</li>
+          <li>Check recording levels (no saturation)</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="timeline-item" data-step="4">
+      <div class="timeline-content">
+        <h3>🎯 Reference Recording</h3>
+        <ul>
+          <li>Place reference capsule at marked position</li>
+          <li>Start pink noise playback</li>
+          <li>Record 10 seconds → <code>reference_capsule.wav</code></li>
+          <li>Listen to verify: sound present, not saturated</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="timeline-item" data-step="5">
+      <div class="timeline-content">
+        <h3>🧪 Capsule Testing</h3>
+        <ul>
+          <li>Place each capsule <strong>EXACTLY</strong> at the same position</li>
+          <li>Record 10s → <code>capsule_001.wav</code>, <code>capsule_002.wav</code>...</li>
+          <li><strong>DO NOT</strong> move speaker or change volume</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="timeline-item" data-step="6">
+      <div class="timeline-content">
+        <h3>📊 Comparative Analysis</h3>
+        <ul>
+          <li>Gather all WAV files in one folder</li>
+          <li>Run: <code>python3 analyze_capsules.py -i ./recordings/ -o report.pdf</code></li>
+          <li>Script generates PDF with superimposed spectra and RMS table</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="timeline-item" data-step="7">
+      <div class="timeline-content">
+        <h3>✅ Results Interpretation</h3>
+        <ul>
+          <li>COMPLIANT: RMS within tolerance (±6 dB)</li>
+          <li>REJECTED: RMS deviates more than 6 dB from average</li>
+          <li>Check spectra: irregularities = suspicious</li>
+          <li>Archive PDF report for traceability</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CRITERIA -->
+<section>
+  <h2 class="section-title">🎯 Acceptance Criteria</h2>
+  <p class="section-intro">
+    Three possible verdicts for each tested capsule. Tolerance is ±6 dB around the average.
+  </p>
+  
+  <div class="criteria-grid">
+    <div class="criteria-card ok">
+      <h3>✅ COMPLIANT</h3>
+      <ul>
+        <li>RMS within tolerance (±6 dB)</li>
+        <li>Regular frequency spectrum</li>
+        <li>No peaks &gt; 3 dB</li>
+        <li>Acceptable noise floor (SNR &gt; 40 dB)</li>
+        <li>Correct tap test response</li>
+      </ul>
+    </div>
+    
+    <div class="criteria-card warn">
+      <h3>⚠️ TO VERIFY</h3>
+      <ul>
+        <li>RMS between 3 and 6 dB deviation</li>
+        <li>Spectrum with some irregularities</li>
+        <li>Redo test to confirm</li>
+        <li>Check positioning</li>
+      </ul>
+    </div>
+    
+    <div class="criteria-card ko">
+      <h3>❌ REJECTED</h3>
+      <ul>
+        <li>RMS &gt; 6 dB deviation from average</li>
+        <li>Very irregular or flat spectrum</li>
+        <li>No tap test response</li>
+        <li>Excessive noise floor</li>
+        <li>Short-circuit or open circuit</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- COMMANDS -->
+<section>
+  <h2 class="section-title">⌨️ Useful Commands</h2>
+  <p class="section-intro">
+    Commands to copy-paste in your terminal. Remember to adapt paths.
+  </p>
+  
+  <h3 style="color: var(--accent); margin-top: 2rem;">Generate pink noise</h3>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    python3 generate_pink_noise.py -d 10 -r 44100 -o pink_noise.wav
+  </div>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    python3 generate_pink_noise.py --duration 30 --rate 48000 --output test.wav
+  </div>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    python3 generate_pink_noise.py --voss  # More precise algorithm
+  </div>
+  
+  <h3 style="color: var(--accent); margin-top: 2rem;">Analyze capsules</h3>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    python3 analyze_capsules.py -i ./recordings/ -o report.pdf
+  </div>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    python3 analyze_capsules.py --input-dir ./tests/ --threshold 3.0
+  </div>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    python3 analyze_capsules.py --pattern "capsule_*.wav"
+  </div>
+  
+  <h3 style="color: var(--accent); margin-top: 2rem;">Check files</h3>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    ls -lh *.wav
+  </div>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    file pink_noise.wav
+  </div>
+  <div class="code-block">
+    <span class="code-label">bash</span>
+    soxi pink_noise.wav  # If sox is installed
+  </div>
+</section>
+
+<!-- LIMITS -->
+<section>
+  <h2 class="section-title">⚠️ Method Limitations</h2>
+  <p class="section-intro">
+    Let's be honest: this method is a quick sorting tool, not a metrology instrument.
+  </p>
+  
+  <div class="bench-container" style="border-color: #ffaa00;">
+    <ul style="list-style: none; padding: 0;">
+      <li style="padding: 0.6rem 0; padding-left: 2rem; position: relative; color: var(--text-dim);">
+        <span style="position: absolute; left: 0; color: #ffaa00;">⚠️</span>
+        Does not replace professional calibration
+      </li>
+      <li style="padding: 0.6rem 0; padding-left: 2rem; position: relative; color: var(--text-dim);">
+        <span style="position: absolute; left: 0; color: #ffaa00;">⚠️</span>
+        Cannot measure directivity
+      </li>
+      <li style="padding: 0.6rem 0; padding-left: 2rem; position: relative; color: var(--text-dim);">
+        <span style="position: absolute; left: 0; color: #ffaa00;">⚠️</span>
+        Cannot measure harmonic distortion (THD)
+      </li>
+      <li style="padding: 0.6rem 0; padding-left: 2rem; position: relative; color: var(--text-dim);">
+        <span style="position: absolute; left: 0; color: #ffaa00;">⚠️</span>
+        Sensitive to room acoustic conditions
+      </li>
+      <li style="padding: 0.6rem 0; padding-left: 2rem; position: relative; color: var(--accent-2);">
+        <span style="position: absolute; left: 0;">✅</span>
+        <strong style="color: var(--accent-2);">Perfectly adapted for quick sorting in artisanal production</strong>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="ai-badge">
+    <span class="ai-icon">🤖</span>
+    <span class="ai-text">100% AI Generated Content & Humain verification</span>
+    <span class="ai-sparkle">✨</span>
+  </div>
+  <p style="margin-top: 0.5rem; font-size: 0.85rem;">
+    🎤 Amateur protocol for comparative electret capsule testing
+  </p>
+</footer>
+
+<script>
+  // Scroll animation (Intersection Observer)
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  document.querySelectorAll('.timeline-item, .equip-card').forEach(el => {
+    observer.observe(el);
+  });
+  
+  // Tips accordion
+  function toggleTip(header) {
+    const item = header.parentElement;
+    item.classList.toggle('open');
+  }
+  
+  // Pink noise visualization on canvas
+  const canvas = document.getElementById('pinkNoiseCanvas');
+  const ctx = canvas.getContext('2d');
+  let animationId;
+  let isPlaying = true;
+  let phase = 0;
+  
+  function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  
+  // Simplified pink noise generator (visualization)
+  function generatePinkNoiseSample() {
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    const white = Math.random() * 2 - 1;
+    b0 = 0.99886 * b0 + white * 0.0555179;
+    b1 = 0.99332 * b1 + white * 0.0750759;
+    b2 = 0.96900 * b2 + white * 0.1538520;
+    b3 = 0.86650 * b3 + white * 0.3104856;
+    b4 = 0.55000 * b4 + white * 0.5329522;
+    b5 = -0.7616 * b5 - white * 0.0168980;
+    const pink = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+    b6 = white * 0.115926;
+    return pink * 0.11;
+  }
+  
+  // Sample buffer
+  const bufferSize = 400;
+  const samples = new Array(bufferSize).fill(0);
+  
+  function drawPinkNoise() {
+    ctx.fillStyle = '#0a0e1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Grid
+    ctx.strokeStyle = 'rgba(0, 217, 255, 0.1)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 10; i++) {
+      const y = (canvas.height / 10) * i;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+    
+    if (isPlaying) {
+      // Add new samples
+      for (let i = 0; i < 4; i++) {
+        samples.shift();
+        samples.push(generatePinkNoiseSample());
+      }
+    }
+    
+    // Draw waveform
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    gradient.addColorStop(0, '#00d9ff');
+    gradient.addColorStop(0.5, '#00ff88');
+    gradient.addColorStop(1, '#ff6b9d');
+    
+    ctx.strokeStyle = gradient;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    
+    const stepX = canvas.width / bufferSize;
+    const centerY = canvas.height / 2;
+    const amplitude = canvas.height * 0.4;
+    
+    for (let i = 0; i < bufferSize; i++) {
+      const x = i * stepX;
+      const y = centerY + samples[i] * amplitude;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    
+    // Center line
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, centerY);
+    ctx.lineTo(canvas.width, centerY);
+    ctx.stroke();
+    
+    // Label
+    ctx.fillStyle = 'rgba(0, 217, 255, 0.7)';
+    ctx.font = '12px monospace';
+    ctx.fillText('PINK NOISE — Real-time visualization', 10, 20);
+    ctx.fillText(isPlaying ? '▶ PLAYING' : '⏸ PAUSED', canvas.width - 100, 20);
+    
+    animationId = requestAnimationFrame(drawPinkNoise);
+  }
+  
+  drawPinkNoise();
+  
+  function togglePinkNoise() {
+    isPlaying = !isPlaying;
+  }
+  
+  function generatePinkNoiseFile() {
+    alert('💾 To generate the WAV file, use the command:\n\npython3 generate_pink_noise.py -d 10 -r 44100 -o pink_noise.wav\n\n(This Python script is provided with the protocol)');
+  }
+</script>
+
+</body>
+</html>
